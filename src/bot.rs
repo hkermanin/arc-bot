@@ -14,6 +14,7 @@ use state::State;
 
 pub async fn run_bot(wallets: types::Wallets) {
     let bot = Bot::from_env();
+    log::info!("Bot started successfully");
     let storage = InMemStorage::<State>::new();
     let handler = dptree::entry()
         .branch(
