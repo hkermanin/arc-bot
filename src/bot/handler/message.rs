@@ -16,26 +16,27 @@ pub async fn message_handler(
                 .reply_markup(menu_keyboard())
                 .await?;
         }
-        State::WaitingAdd => {           
-            
+        State::WaitingAdd => {
             if let Some(text) = msg.text() {
                 if let Some(user) = msg.from.as_ref() {
-                sqlx::query("
+                    sqlx::query(
+                        "
                 INSERT INTO todos (user_id, text)
                 VALUES (?, ?)
-                ")
-                .bind(msg.chat.id.0)
-                .bind(user.id.0 as i64)
-                .execute(&db)
-                .await?;
-            
-                dialogue.update(State::Start).await?;
-
-                bot.send_message(msg.chat.id, format!("{} added to list", text))
-                    .reply_markup(menu_keyboard())
+                ",
+                    )
+                    .bind(user.id.0 as i64)
+                    .bind(text)
+                    .execute(&db)
                     .await?;
+
+                    dialogue.update(State::Start).await?;
+
+                    bot.send_message(msg.chat.id, format!("{} added to list", text))
+                        .reply_markup(menu_keyboard())
+                        .await?;
+                }
             }
-             } 
         }
     }
 
