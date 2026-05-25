@@ -19,6 +19,8 @@ pub async fn callback_handler(
                     .await?;
             }
         } else if data == "list" {
+            dialogue.update(State::Start).await?;
+            
             if let Some(msg) = q.message {
                 bot.send_message(msg.chat().id, "some").await?;
             }

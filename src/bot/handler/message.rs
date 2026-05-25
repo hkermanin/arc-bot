@@ -12,18 +12,30 @@ pub async fn message_handler(
 ) -> HandlerResult {
     match state {
         State::Start => {
-            bot.send_message(msg.chat.id, "Hello\nWlecom to my bot.")
+            bot.send_message(msg.chat.id, "Hello\nWelcome to ToDo bot.")
                 .reply_markup(menu_keyboard())
                 .await?;
         }
-        State::WaitingAdd => {
+        State::WaitingAdd => {           
+            
             if let Some(text) = msg.text() {
-                bot.send_message(msg.chat.id, format!("Added task: {}", text))
+                if let Some(user) = msg.from.as_ref() {
+                sqlx::query("
+                INSERT INTO todos (user_id, text)
+                VALUES (?, ?)
+                ")
+                .bind(msg.chat.id.0)
+                .bind(user.id.0 as i64)
+                .execute(&db)
+                .await?;
+            
+                dialogue.update(State::Start).await?;
+
+                bot.send_message(msg.chat.id, format!("{} added to list", text))
                     .reply_markup(menu_keyboard())
                     .await?;
-
-                dialogue.update(State::Start).await?;
             }
+             } 
         }
     }
 
