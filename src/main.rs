@@ -1,13 +1,14 @@
-use std::sync::Arc;
-use tokio::sync::Mutex;
 
 mod bot;
+mod db;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     pretty_env_logger::init();
 
-    let wallets: bot::types::Wallets = Arc::new(Mutex::new(vec![]));
+    let db = db::init_db().await?;
 
-    bot::run_bot(wallets).await;
+    bot::run_bot(db).await;
+
+    Ok(())
 }

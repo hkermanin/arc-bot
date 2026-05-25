@@ -1,14 +1,14 @@
 use crate::bot::keyboards::menu_keyboard;
-use teloxide::prelude::*;
-use crate::bot::types::{MyDialogue,Wallets,HandlerResult};
 use crate::bot::state::State;
+use crate::bot::types::{HandlerResult, MyDialogue};
+use teloxide::prelude::*;
 
 pub async fn message_handler(
     bot: Bot,
     msg: Message,
     dialogue: MyDialogue,
     state: State,
-    wallets: Wallets,
+    db: sqlx::Pool<sqlx::Sqlite>,
 ) -> HandlerResult {
     match state {
         State::Start => {
@@ -18,12 +18,6 @@ pub async fn message_handler(
         }
         State::WaitingAdd => {
             if let Some(text) = msg.text() {
-                {
-                    let mut wallets = wallets.lock().await;
-
-                    wallets.push(text.to_string());
-                }
-
                 bot.send_message(msg.chat.id, format!("Added task: {}", text))
                     .reply_markup(menu_keyboard())
                     .await?;

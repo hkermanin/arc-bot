@@ -1,13 +1,12 @@
-use crate::bot::keyboards::menu_keyboard;
-use teloxide::prelude::*;
-use crate::bot::types::{MyDialogue,Wallets,HandlerResult};
 use crate::bot::state::State;
+use crate::bot::types::{HandlerResult, MyDialogue};
+use teloxide::prelude::*;
 
 pub async fn callback_handler(
     bot: Bot,
     q: CallbackQuery,
     dialogue: MyDialogue,
-    wallets: Wallets,
+    db: sqlx::Pool<sqlx::Sqlite>,
 ) -> HandlerResult {
     if let Some(data) = q.data {
         bot.answer_callback_query(q.id).await?;
@@ -21,12 +20,7 @@ pub async fn callback_handler(
             }
         } else if data == "list" {
             if let Some(msg) = q.message {
-                let wallets = wallets.lock().await;
-                let text = wallets.join("\n");
-                bot.send_message(msg.chat().id, "List of your task:")
-                    .reply_markup(menu_keyboard())
-                    .await?;
-                bot.send_message(msg.chat().id, text).await?;
+                bot.send_message(msg.chat().id, "some").await?;
             }
         }
     }
