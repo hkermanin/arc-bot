@@ -11,7 +11,7 @@ pub async fn callback_handler(
     bot: Bot,
     q: CallbackQuery,
     dialogue: MyDialogue,
-    db: sqlx::Pool<sqlx::Sqlite>,
+    db: sqlx::Pool<sqlx::Postgres>,
 ) -> HandlerResult {
     if let Some(data) = q.data {
         bot.answer_callback_query(q.id).await?;
@@ -29,7 +29,7 @@ pub async fn callback_handler(
             let todos = sqlx::query_as::<_, Todo>(
                 "
                 SELECT text FROM todos
-                WHERE user_id = ?
+                WHERE user_id = $1
             ",
             )
             .bind(q.from.id.0 as i64)

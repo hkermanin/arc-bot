@@ -8,7 +8,7 @@ pub async fn message_handler(
     msg: Message,
     dialogue: MyDialogue,
     state: State,
-    db: sqlx::Pool<sqlx::Sqlite>,
+    db: sqlx::Pool<sqlx::Postgres>,
 ) -> HandlerResult {
     match state {
         State::Start => {
@@ -22,7 +22,7 @@ pub async fn message_handler(
                     sqlx::query(
                         "
                 INSERT INTO todos (user_id, text)
-                VALUES (?, ?)
+                VALUES ($1, $2)
                 ",
                     )
                     .bind(user.id.0 as i64)

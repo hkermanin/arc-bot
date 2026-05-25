@@ -1,13 +1,14 @@
-use sqlx::SqlitePool;
+use sqlx::PgPool;
 
-pub async fn init_db() -> Result<SqlitePool, sqlx::Error> {
-    let db = SqlitePool::connect("sqlite://database.db").await?;
+pub async fn init_db() -> Result<PgPool, sqlx::Error> {
+    let database_url = std::env::var("DATABASE_URL").unwrap();
+    let db = PgPool::connect(&database_url).await?;
 
     sqlx::query(
         "
         CREATE TABLE IF NOT EXISTS todos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
+            id SERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
             text TEXT NOT NULL
         );
         ",

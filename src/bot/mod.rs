@@ -12,7 +12,7 @@ use handler::callback::callback_handler;
 use handler::message::message_handler;
 use state::State;
 
-pub async fn run_bot(db: sqlx::Pool<sqlx::Sqlite>) {
+pub async fn run_bot(db: sqlx::Pool<sqlx::Postgres>) {
     let bot = Bot::from_env();
     log::info!("Bot started successfully");
     let storage = InMemStorage::<State>::new();
