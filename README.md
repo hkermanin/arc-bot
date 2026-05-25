@@ -6,10 +6,11 @@ This project was created mainly for learning:
 
 - Teloxide
 - SQLx
-- SQLite
+- PostgreSQL
 - Telegram bot architecture in Rust
 - State management with dialogues
 - Modular Rust project structure
+- Async Rust development
 
 The project is also intended to serve as a reusable template for future Telegram bots.
 
@@ -21,8 +22,9 @@ The project is also intended to serve as a reusable template for future Telegram
 - List todos
 - Inline keyboard menu
 - Dialogue/state management
-- SQLite database integration
+- PostgreSQL database integration
 - Modular project structure
+- Environment variable configuration with dotenvy
 
 ---
 
@@ -31,7 +33,7 @@ The project is also intended to serve as a reusable template for future Telegram
 - Rust
 - Teloxide
 - SQLx
-- SQLite
+- PostgreSQL
 - Tokio
 - dotenvy
 
@@ -52,7 +54,7 @@ cd telegram-todo-bot
 
 ```env
 TELOXIDE_TOKEN=your_bot_token
-DATABASE_URL=sqlite://database.db
+DATABASE_URL=postgresql://postgres:password@host:5432/database
 RUST_LOG=trace
 ```
 
@@ -68,9 +70,9 @@ cargo run
 
 # Database
 
-The project uses SQLite with SQLx.
+The project uses PostgreSQL with SQLx.
 
-The database file is automatically created on startup if it does not exist.
+The database table is automatically created on startup if it does not exist.
 
 ---
 
@@ -79,8 +81,9 @@ The database file is automatically created on startup if it does not exist.
 This project was designed to:
 
 - Learn Telegram bot development in Rust
-- Learn SQLx and SQLite
+- Learn SQLx and PostgreSQL
 - Practice async Rust architecture
+- Learn state management with Teloxide dialogues
 - Build a reusable template for future Telegram bots
 
 ---
@@ -91,8 +94,20 @@ This project was designed to:
 - Edit todos
 - Better error handling
 - Persistent dialogue storage
-- Migrations
+- SQLx migrations
 - Docker support
+- Deployment automation
+
+---
+
+# Deployment
+
+The project can be deployed on platforms such as:
+
+- Railway
+- Fly.io
+- DigitalOcean
+- VPS servers
 
 ---
 
