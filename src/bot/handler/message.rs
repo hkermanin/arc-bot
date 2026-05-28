@@ -2,8 +2,8 @@ use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
 
-use crate::bot::handler::messages::start;
 use crate::bot::handler::messages::send;
+use crate::bot::handler::messages::start;
 
 pub async fn message_handler(
     bot: Bot,

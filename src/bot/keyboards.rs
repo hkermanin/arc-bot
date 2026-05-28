@@ -8,7 +8,8 @@ pub fn menu_keyboard() -> InlineKeyboardMarkup {
 }
 
 pub fn create_wallet_keyboard() -> InlineKeyboardMarkup {
-    InlineKeyboardMarkup::new(vec![vec![
-        InlineKeyboardButton::callback("Create new Wallet", "new_wallet"),
-    ]])
+    InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
+        "Create new Wallet",
+        "new_wallet",
+    )]])
 }

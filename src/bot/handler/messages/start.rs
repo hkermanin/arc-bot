@@ -11,19 +11,14 @@ pub async fn start(
     state: State,
     db: sqlx::Pool<sqlx::Postgres>,
 ) -> HandlerResult {
-    match find_user(msg.from.unwrap().id.0 as i64, &db).await?{
-    
+    match find_user(msg.from.unwrap().id.0 as i64, &db).await? {
         Some(user) => {
-     
             bot.send_message(msg.chat.id, "You Have wallet")
                 .reply_markup(menu_keyboard())
                 .await?;
-        
-        },
-
+        }
 
         None => {
-            
             let text = "\
      Welcome to the Arc Dex trading Bot!
 To get started, you first need to create your wallet.
@@ -31,12 +26,8 @@ To get started, you first need to create your wallet.
             bot.send_message(msg.chat.id, text)
                 .reply_markup(create_wallet_keyboard())
                 .await?;
-        
         }
-
-    
     }
-    
 
     Ok(())
 }

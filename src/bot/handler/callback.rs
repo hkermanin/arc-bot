@@ -1,4 +1,4 @@
-use crate::arc::wallet::create_wallet;
+use crate::bot::handler::callbacks::wallet::create_new_wallet;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
@@ -14,8 +14,8 @@ pub async fn callback_handler(
     dialogue: MyDialogue,
     db: sqlx::Pool<sqlx::Postgres>,
 ) -> HandlerResult {
-    if let Some(data) = q.data {
-        bot.answer_callback_query(q.id).await?;
+    if let Some(data) = &q.data {
+        bot.answer_callback_query(q.id.clone()).await?;
 
         if data == "add" {
             dialogue.update(State::Send).await?;
@@ -44,17 +44,11 @@ pub async fn callback_handler(
                 .collect::<Vec<_>>()
                 .join("\n");
 
-            if let Some(msg) = q.message {
+            if let Some(msg) = &q.message {
                 bot.send_message(msg.chat().id, text).await?;
             }
-        }else if data == "new_wallet"{
-            let result = create_wallet().await;
-            let result = format!("Your wallet created: {}", result);
-            if let Some(msg) = q.message {
-                bot.send_message(msg.chat().id, result).await?;
-            }
-            
-        
+        } else if data == "new_wallet" {
+            create_new_wallet(bot, q, dialogue, db).await?;
         }
     }
 
