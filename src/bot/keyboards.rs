@@ -6,3 +6,9 @@ pub fn menu_keyboard() -> InlineKeyboardMarkup {
         InlineKeyboardButton::callback("List", "list"),
     ]])
 }
+
+pub fn create_wallet_keyboard() -> InlineKeyboardMarkup {
+    InlineKeyboardMarkup::new(vec![vec![
+        InlineKeyboardButton::callback("Create new Wallet", "new_wallet"),
+    ]])
+}

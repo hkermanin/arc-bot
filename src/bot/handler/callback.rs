@@ -1,3 +1,4 @@
+use crate::arc::wallet::create_wallet;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
@@ -46,6 +47,14 @@ pub async fn callback_handler(
             if let Some(msg) = q.message {
                 bot.send_message(msg.chat().id, text).await?;
             }
+        }else if data == "new_wallet"{
+            let result = create_wallet().await;
+            let result = format!("Your wallet created: {}", result);
+            if let Some(msg) = q.message {
+                bot.send_message(msg.chat().id, result).await?;
+            }
+            
+        
         }
     }
 

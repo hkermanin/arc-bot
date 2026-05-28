@@ -1,5 +1,7 @@
 use sqlx::PgPool;
 
+pub mod fun;
+
 pub async fn init_db() -> Result<PgPool, sqlx::Error> {
     let database_url = std::env::var("DATABASE_URL").unwrap();
     let db = PgPool::connect(&database_url).await?;

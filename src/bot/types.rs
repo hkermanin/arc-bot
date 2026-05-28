@@ -9,3 +9,10 @@ use crate::bot::state::State;
 
 pub type MyDialogue = Dialogue<State, InMemStorage<State>>;
 pub type HandlerResult = Result<(), Box<dyn std::error::Error + Send + Sync>>;
+
+use sqlx::FromRow;
+
+#[derive(Debug, FromRow)]
+pub struct User{
+    pub user_id: i64,
+}
