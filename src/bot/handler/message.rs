@@ -1,7 +1,9 @@
-use crate::bot::keyboards::menu_keyboard;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
+
+use crate::bot::handler::messages::start;
+use crate::bot::handler::messages::send;
 
 pub async fn message_handler(
     bot: Bot,
@@ -12,31 +14,10 @@ pub async fn message_handler(
 ) -> HandlerResult {
     match state {
         State::Start => {
-            bot.send_message(msg.chat.id, "Hello\nWelcome to ToDo bot.")
-                .reply_markup(menu_keyboard())
-                .await?;
+            start::start(bot, msg, dialogue, state, db).await?;
         }
-        State::WaitingAdd => {
-            if let Some(text) = msg.text() {
-                if let Some(user) = msg.from.as_ref() {
-                    sqlx::query(
-                        "
-                INSERT INTO todos (user_id, text)
-                VALUES ($1, $2)
-                ",
-                    )
-                    .bind(user.id.0 as i64)
-                    .bind(text)
-                    .execute(&db)
-                    .await?;
-
-                    dialogue.update(State::Start).await?;
-
-                    bot.send_message(msg.chat.id, format!("{} added to list", text))
-                        .reply_markup(menu_keyboard())
-                        .await?;
-                }
-            }
+        State::Send => {
+            send::send(bot, msg, dialogue, state, db).await?;
         }
     }
 
