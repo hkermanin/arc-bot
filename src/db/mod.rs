@@ -18,5 +18,16 @@ pub async fn init_db() -> Result<PgPool, sqlx::Error> {
     .execute(&db)
     .await?;
 
+    sqlx::query(
+        "
+        CREATE TABLE IF NOT EXISTS walletconfig (
+            wallet_id TEXT PRIMARY KEY,
+            wallet_name TEXT NOT NULL
+        );
+        ",
+    )
+    .execute(&db)
+    .await?;
+
     Ok(db)
 }
