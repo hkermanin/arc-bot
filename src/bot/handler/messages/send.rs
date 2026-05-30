@@ -1,5 +1,5 @@
 use crate::arc::wallet::init::WalletConfig;
-use crate::bot::keyboards::menu_keyboard;
+use crate::bot::keyboards::main_menu_keyboard;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
@@ -28,7 +28,7 @@ pub async fn send(
             dialogue.update(State::Start).await?;
 
             bot.send_message(msg.chat.id, format!("{} added to list", text))
-                .reply_markup(menu_keyboard())
+                .reply_markup(main_menu_keyboard())
                 .await?;
         }
     }

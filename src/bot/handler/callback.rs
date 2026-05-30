@@ -20,7 +20,7 @@ pub async fn callback_handler(
         bot.answer_callback_query(q.id.clone()).await?;
 
         if data == "add" {
-            dialogue.update(State::Send).await?;
+            dialogue.update(State::Main).await?;
 
             if let Some(msg) = q.message {
                 bot.send_message(msg.chat().id, "Please enter your task:")

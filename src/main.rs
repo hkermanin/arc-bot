@@ -1,6 +1,5 @@
 use crate::arc::wallet::init::init_arc_wallet;
 
-
 mod arc;
 mod bot;
 mod db;

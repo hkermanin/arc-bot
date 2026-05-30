@@ -2,5 +2,5 @@
 pub enum State {
     #[default]
     Start,
-    Send,
+    Main,
 }

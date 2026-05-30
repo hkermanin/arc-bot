@@ -3,8 +3,8 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::arc::wallet::config::Config;
 use crate::arc::wallet::encrypt::ciphertext;
+use crate::arc::wallet::init::WalletConfig;
 
 #[derive(Serialize)]
 struct CreateWalletRequest {
@@ -42,17 +42,15 @@ pub struct Wallet {
     pub blockchain: String,
 }
 
-pub async fn create_wallet(
-    wallet_set_id: &str,
-    client: &Client,
-    config: &Config,
-) -> Result<Wallet> {
-    let entity_secret_ciphertext = ciphertext(&config.public_key, &config.entity_secret)?;
+pub async fn create_wallet(wallet_config: WalletConfig) -> Result<Wallet> {
+    let client = Client::new();
+    let entity_secret_ciphertext =
+        ciphertext(&wallet_config.public_key, &wallet_config.entity_secret)?;
 
     let body = CreateWalletRequest {
         idempotency_key: Uuid::new_v4().to_string(),
 
-        wallet_set_id: wallet_set_id.to_string(),
+        wallet_set_id: wallet_config.wallet_id.to_string(),
 
         blockchains: vec!["ARC-TESTNET".to_string()],
 
@@ -65,7 +63,7 @@ pub async fn create_wallet(
 
     let response = client
         .post("https://api.circle.com/v1/w3s/developer/wallets")
-        .header("Authorization", format!("Bearer {}", config.api_key))
+        .header("Authorization", format!("Bearer {}", wallet_config.api_key))
         .json(&body)
         .send()
         .await?;

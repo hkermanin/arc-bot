@@ -38,7 +38,7 @@ pub async fn init_arc_wallet(db: &sqlx::Pool<sqlx::Postgres>) -> Result<WalletCo
                 wallet_name: wallet.wallet_name,
                 wallet_id: wallet.wallet_id,
             });
-        }else {
+        } else {
             panic!("Wallet set can not load from DB");
         }
     }

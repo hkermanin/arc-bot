@@ -1,4 +1,4 @@
-use crate::bot::keyboards::{create_wallet_keyboard, menu_keyboard};
+use crate::bot::keyboards::{create_wallet_keyboard, main_menu_keyboard};
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use crate::db::fun::wallet::find_user;
@@ -14,15 +14,20 @@ pub async fn start(
     match find_user(msg.from.unwrap().id.0 as i64, &db).await? {
         Some(user) => {
             bot.send_message(msg.chat.id, "You Have wallet")
-                .reply_markup(menu_keyboard())
+                .reply_markup(main_menu_keyboard())
                 .await?;
         }
 
         None => {
             let text = "\
-     Welcome to the Arc Dex trading Bot!
-To get started, you first need to create your wallet.
-";
+👋 Welcome to Arc
+
+You don't have a wallet yet.
+
+Create your wallet to start trading and using AI analysis tools.
+
+👇 Click the button below to continue.";
+
             bot.send_message(msg.chat.id, text)
                 .reply_markup(create_wallet_keyboard())
                 .await?;

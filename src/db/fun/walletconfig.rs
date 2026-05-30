@@ -1,6 +1,5 @@
 use crate::arc::wallet::setwallet::WalletSet;
 
-
 #[derive(sqlx::FromRow)]
 pub struct WalletConfigDB {
     pub wallet_id: String,

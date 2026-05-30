@@ -18,7 +18,7 @@ pub async fn message_handler(
         State::Start => {
             start::start(bot, msg, dialogue, state, db).await?;
         }
-        State::Send => {
+        State::Main => {
             send::send(bot, msg, dialogue, state, db, wallet_config).await?;
         }
     }

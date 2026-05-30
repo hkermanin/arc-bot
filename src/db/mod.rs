@@ -8,10 +8,11 @@ pub async fn init_db() -> Result<PgPool, sqlx::Error> {
 
     sqlx::query(
         "
-        CREATE TABLE IF NOT EXISTS todos (
+        CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
-            user_id BIGINT NOT NULL,
-            text TEXT NOT NULL
+            user_id BIGINT NOT NULL UNIQUE,
+            wallet_id TEXT NOT NULL UNIQUE,
+            wallet_address TEXT NOT NULL UNIQUE
         );
         ",
     )
