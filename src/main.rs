@@ -1,4 +1,5 @@
-use crate::arc::wallet::init_arc_wallet;
+use crate::arc::wallet::init::init_arc_wallet;
+
 
 mod arc;
 mod bot;
