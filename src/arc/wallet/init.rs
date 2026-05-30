@@ -5,6 +5,7 @@ use crate::arc::wallet::config::arc_config;
 use crate::arc::wallet::setwallet::create_set_wallet;
 use crate::db::fun::walletconfig::{add_wallet_id, find_wallet_id};
 
+#[derive(Clone)]
 pub struct WalletConfig {
     pub api_key: String,
     pub entity_secret: String,

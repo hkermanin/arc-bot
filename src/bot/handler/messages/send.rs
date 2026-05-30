@@ -1,3 +1,4 @@
+use crate::arc::wallet::init::WalletConfig;
 use crate::bot::keyboards::menu_keyboard;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
@@ -9,6 +10,7 @@ pub async fn send(
     dialogue: MyDialogue,
     state: State,
     db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
 ) -> HandlerResult {
     if let Some(text) = msg.text() {
         if let Some(user) = msg.from.as_ref() {

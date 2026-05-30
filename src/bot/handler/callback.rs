@@ -1,3 +1,4 @@
+use crate::arc::wallet::init::WalletConfig;
 use crate::bot::handler::callbacks::wallet::create_new_wallet;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
@@ -13,6 +14,7 @@ pub async fn callback_handler(
     q: CallbackQuery,
     dialogue: MyDialogue,
     db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
 ) -> HandlerResult {
     if let Some(data) = &q.data {
         bot.answer_callback_query(q.id.clone()).await?;
@@ -48,7 +50,7 @@ pub async fn callback_handler(
                 bot.send_message(msg.chat().id, text).await?;
             }
         } else if data == "new_wallet" {
-            create_new_wallet(bot, q, dialogue, db).await?;
+            create_new_wallet(bot, q, dialogue, db, wallet_config).await?;
         }
     }
 

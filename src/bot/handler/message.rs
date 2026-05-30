@@ -1,3 +1,4 @@
+use crate::arc::wallet::init::WalletConfig;
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
@@ -11,13 +12,14 @@ pub async fn message_handler(
     dialogue: MyDialogue,
     state: State,
     db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
 ) -> HandlerResult {
     match state {
         State::Start => {
             start::start(bot, msg, dialogue, state, db).await?;
         }
         State::Send => {
-            send::send(bot, msg, dialogue, state, db).await?;
+            send::send(bot, msg, dialogue, state, db, wallet_config).await?;
         }
     }
 

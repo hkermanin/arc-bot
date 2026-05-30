@@ -12,7 +12,9 @@ use handler::callback::callback_handler;
 use handler::message::message_handler;
 use state::State;
 
-pub async fn run_bot(db: sqlx::Pool<sqlx::Postgres>) {
+use crate::arc::wallet::init::WalletConfig;
+
+pub async fn run_bot(db: sqlx::Pool<sqlx::Postgres>, wallet_config: WalletConfig) {
     let bot = Bot::from_env();
     log::info!("Bot started successfully");
     let storage = InMemStorage::<State>::new();
@@ -29,7 +31,7 @@ pub async fn run_bot(db: sqlx::Pool<sqlx::Postgres>) {
         );
 
     Dispatcher::builder(bot, handler)
-        .dependencies(dptree::deps![storage, db])
+        .dependencies(dptree::deps![storage, db, wallet_config])
         .build()
         .dispatch()
         .await;

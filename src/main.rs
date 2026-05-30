@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let wallet_config = init_arc_wallet(&db).await?;
 
-    bot::run_bot(db).await;
+    bot::run_bot(db, wallet_config).await;
 
     Ok(())
 }
