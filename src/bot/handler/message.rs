@@ -3,7 +3,7 @@ use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
 
-use crate::bot::handler::messages::send;
+use crate::bot::handler::messages::menu;
 use crate::bot::handler::messages::start;
 
 pub async fn message_handler(
@@ -19,7 +19,10 @@ pub async fn message_handler(
             start::start(bot, msg, dialogue, state, db).await?;
         }
         State::Main => {
-            send::send(bot, msg, dialogue, state, db, wallet_config).await?;
+            menu::back_menu(bot, msg, dialogue, state, db, wallet_config).await?;
+        }
+        State::Wallet => {
+            menu::back_menu(bot, msg, dialogue, state, db, wallet_config).await?;
         }
     }
 

@@ -3,4 +3,5 @@ pub enum State {
     #[default]
     Start,
     Main,
+    Wallet,
 }

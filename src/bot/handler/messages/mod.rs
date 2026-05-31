@@ -1,2 +1,2 @@
-pub mod send;
+pub mod menu;
 pub mod start;
