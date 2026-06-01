@@ -12,7 +12,5 @@ pub async fn back_menu(
     db: sqlx::Pool<sqlx::Postgres>,
     wallet_config: WalletConfig,
 ) -> HandlerResult {
-     
-
     Ok(())
 }

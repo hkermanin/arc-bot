@@ -21,6 +21,20 @@ pub fn wallet_menu_keyboard() -> InlineKeyboardMarkup {
     ])
 }
 
+pub fn cancel_send_keyboard() -> InlineKeyboardMarkup {
+    InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
+        "❌ Cancel",
+        "cancel_send",
+    )]])
+}
+
+pub fn cancel_confirm_send_keyboard() -> InlineKeyboardMarkup {
+    InlineKeyboardMarkup::new(vec![vec![
+        InlineKeyboardButton::callback("❌ Cancel", "cancel_send"),
+        InlineKeyboardButton::callback("✅ Confirm", "confirm_send"),
+    ]])
+}
+
 pub fn create_wallet_keyboard() -> InlineKeyboardMarkup {
     InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
         "👛 Create Wallet",

@@ -1,9 +1,58 @@
 use crate::arc::wallet::arc_create_wallet;
 use crate::arc::wallet::init::WalletConfig;
-use crate::bot::keyboards::main_menu_keyboard;
-use crate::bot::state::State;
+use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
+use crate::bot::keyboards::{cancel_send_keyboard, main_menu_keyboard, wallet_menu_keyboard};
+use crate::bot::state::{SendState, State};
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
+use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup};
+
+pub async fn send_to(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> HandlerResult {
+    let msg = bot
+        .edit_message_text(
+            q.message.as_ref().unwrap().chat().id,
+            q.message.as_ref().unwrap().id(),
+            "📤 Send Assets\nPlease enter the recipient wallet address:",
+        )
+        .reply_markup(cancel_send_keyboard())
+        .await?;
+
+    dialogue
+        .update(State::Send(SendState::WaitingRecipient {
+            prompt_message_id: msg.id,
+        }))
+        .await?;
+
+    Ok(())
+}
+
+pub async fn cancel_send(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> HandlerResult {
+    dialogue.update(State::Wallet).await?;
+
+    wallet_show_bot(bot, q, dialogue).await?;
+    Ok(())
+}
+
+pub async fn confirm_send(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> HandlerResult {
+    dialogue.update(State::Wallet).await?;
+
+    let keyboard = InlineKeyboardMarkup::new(vec![
+    vec![
+        InlineKeyboardButton::callback("⬅️ Back", "cancel_send"),
+    ],
+    ]);
+
+    bot
+        .edit_message_text(
+            q.message.as_ref().unwrap().chat().id,
+            q.message.as_ref().unwrap().id(),
+            "✅ Transfer Submitted",
+        )
+        .reply_markup(keyboard)
+        .await?;
+
+    Ok(())
+}
 
 pub async fn create_new_wallet(
     bot: Bot,

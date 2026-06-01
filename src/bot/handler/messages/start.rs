@@ -13,12 +13,25 @@ pub async fn start(
 ) -> HandlerResult {
     match find_user(msg.from.unwrap().id.0 as i64, &db).await? {
         Some(user) => {
-            bot.send_message(msg.chat.id, "You Have wallet")
+            bot.delete_message(msg.chat.id, msg.id).await?;
+
+            let text = "\
+🚀 Arc Dashboard
+
+Welcome to Arc.
+
+Manage your wallet, trade assets, and access AI-powered blockchain insights from one place.
+
+Select an option below to continue.";
+
+            bot.send_message(msg.chat.id, text)
                 .reply_markup(main_menu_keyboard())
                 .await?;
         }
 
         None => {
+            bot.delete_message(msg.chat.id, msg.id).await?;
+
             let text = "\
 👋 Welcome to Arc
 

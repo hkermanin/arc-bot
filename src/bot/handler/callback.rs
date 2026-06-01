@@ -1,11 +1,10 @@
 use crate::arc::wallet::init::WalletConfig;
 use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
-use crate::bot::handler::callbacks::wallet::create_new_wallet;
+use crate::bot::handler::callbacks::wallet::{cancel_send, confirm_send, create_new_wallet, send_to};
 use crate::bot::keyboards::{main_menu_keyboard, wallet_menu_keyboard};
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
-
 
 pub async fn callback_handler(
     bot: Bot,
@@ -18,10 +17,15 @@ pub async fn callback_handler(
         bot.answer_callback_query(q.id.clone()).await?;
 
         if data == "wallet" {
-           wallet_show_bot(bot, q, dialogue).await?;
+            wallet_show_bot(bot, q, dialogue).await?;
         } else if data == "back_wallet" {
             back_wallet_show_bot(bot, q, dialogue).await?;
-          
+        } else if data == "send" {
+            send_to(bot, q, dialogue).await?;
+        } else if data == "cancel_send" {
+            cancel_send(bot, q, dialogue).await?;
+        } else if data == "confirm_send" {
+            confirm_send(bot, q, dialogue).await?;
         } else if data == "new_wallet" {
             create_new_wallet(bot, q, dialogue, db, wallet_config).await?;
         }
