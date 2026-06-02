@@ -5,6 +5,7 @@ use crate::db::fun::wallet::add_user;
 mod config;
 mod encrypt;
 pub mod init;
+pub mod send;
 pub mod setwallet;
 pub mod wallet;
 

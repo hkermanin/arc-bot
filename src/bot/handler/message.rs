@@ -43,7 +43,7 @@ pub async fn message_handler(
                     wallet_config,
                 )
                 .await?;
-            },
+            }
             SendState::WaitingConfirmation {
                 recipient,
                 amount,

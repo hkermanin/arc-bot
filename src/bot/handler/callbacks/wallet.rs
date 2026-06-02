@@ -1,5 +1,6 @@
 use crate::arc::wallet::arc_create_wallet;
 use crate::arc::wallet::init::WalletConfig;
+use crate::arc::wallet::send::send_transaction;
 use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
 use crate::bot::keyboards::{cancel_send_keyboard, main_menu_keyboard, wallet_menu_keyboard};
 use crate::bot::state::{SendState, State};
@@ -33,23 +34,42 @@ pub async fn cancel_send(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> Ha
     Ok(())
 }
 
-pub async fn confirm_send(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> HandlerResult {
+pub async fn confirm_send(
+    bot: Bot,
+    q: CallbackQuery,
+    dialogue: MyDialogue,
+    db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
+) -> HandlerResult {
+    let state = dialogue.get().await?;
+
+    let response = match state {
+        Some(State::Send(SendState::WaitingConfirmation {
+            recipient, amount, ..
+        })) => {
+            let user_id = q.from.id.0 as i64;
+            let response = send_transaction(user_id, recipient, amount, db, wallet_config).await?;
+            response
+        }
+
+        _ => {"Unexpected state. Please start the send process again.".to_string()}
+    };
+
     dialogue.update(State::Wallet).await?;
 
-    let keyboard = InlineKeyboardMarkup::new(vec![
-    vec![
-        InlineKeyboardButton::callback("⬅️ Back", "cancel_send"),
-    ],
-    ]);
+    let keyboard = InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
+        "⬅️ Back",
+        "cancel_send",
+    )]]);
 
-    bot
-        .edit_message_text(
-            q.message.as_ref().unwrap().chat().id,
-            q.message.as_ref().unwrap().id(),
-            "✅ Transfer Submitted",
-        )
-        .reply_markup(keyboard)
-        .await?;
+    bot.edit_message_text(
+        q.message.as_ref().unwrap().chat().id,
+        q.message.as_ref().unwrap().id(),
+        response,
+        // "✅ Transfer Submitted",
+    )
+    .reply_markup(keyboard)
+    .await?;
 
     Ok(())
 }

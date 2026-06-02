@@ -1,6 +1,8 @@
 use crate::arc::wallet::init::WalletConfig;
 use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
-use crate::bot::handler::callbacks::wallet::{cancel_send, confirm_send, create_new_wallet, send_to};
+use crate::bot::handler::callbacks::wallet::{
+    cancel_send, confirm_send, create_new_wallet, send_to,
+};
 use crate::bot::keyboards::{main_menu_keyboard, wallet_menu_keyboard};
 use crate::bot::state::State;
 use crate::bot::types::{HandlerResult, MyDialogue};
@@ -25,7 +27,7 @@ pub async fn callback_handler(
         } else if data == "cancel_send" {
             cancel_send(bot, q, dialogue).await?;
         } else if data == "confirm_send" {
-            confirm_send(bot, q, dialogue).await?;
+            confirm_send(bot, q, dialogue, db, wallet_config).await?;
         } else if data == "new_wallet" {
             create_new_wallet(bot, q, dialogue, db, wallet_config).await?;
         }
