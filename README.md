@@ -1,116 +1,132 @@
-# Telegram Todo Bot
+# ArcCircleBot
 
-A simple Telegram Todo Bot built with Rust using Teloxide and SQLx.
+**Telegram Bot:** `@arccirclebot`
 
-This project was created mainly for learning:
-
-- Teloxide
-- SQLx
-- PostgreSQL
-- Telegram bot architecture in Rust
-- State management with dialogues
-- Modular Rust project structure
-- Async Rust development
-
-The project is also intended to serve as a reusable template for future Telegram bots.
+Try the bot directly on Telegram and create your own ARC testnet wallet in seconds.
 
 ---
 
-# Features
+## Overview
 
-- Add todos
-- List todos
-- Inline keyboard menu
-- Dialogue/state management
-- PostgreSQL database integration
-- Modular project structure
-- Environment variable configuration with dotenvy
+ArcCircleBot is a Telegram-based crypto wallet built with Rust and powered by Circle Developer-Controlled Wallets.
+
+The bot allows users to create and manage wallets directly from Telegram without needing to interact with complex blockchain tools or browser extensions.
+
+### Current Features
+
+- Wallet creation on ARC Testnet
+- Wallet balance retrieval
+- Asset transfers between wallets
+- User wallet management
+- Secure Circle API integration
+- PostgreSQL-backed persistence
 
 ---
 
-# Technologies
+## Features
+
+### Wallet Management
+
+- Create a new wallet
+- Store wallet information securely
+- Retrieve wallet details when needed
+
+### Balance Tracking
+
+- View wallet balances
+- Display token balances available in the wallet
+
+### Asset Transfers
+
+- Send assets to another wallet address
+- Confirmation step before execution
+- Transaction status reporting
+
+### Infrastructure
+
+- Rust async backend
+- PostgreSQL database
+- Circle Developer-Controlled Wallets
+- RSA-OAEP + SHA256 encryption for Entity Secret handling
+- Modular architecture for future expansion
+
+---
+
+## Technology Stack
+
+### Backend
 
 - Rust
-- Teloxide
-- SQLx
-- PostgreSQL
 - Tokio
-- dotenvy
+- Reqwest
+- Serde
+- SQLx
+- Anyhow
+
+### Database
+
+- PostgreSQL
+
+### Blockchain Infrastructure
+
+- Circle Developer-Controlled Wallets
+- ARC Testnet
 
 ---
 
-# Setup
+## Project Architecture
 
-## Clone the repository
-
-```bash
-git clone https://github.com/hkermanin/telegram-todo-bot.git
-cd telegram-todo-bot
+```text
+Telegram
+    │
+    ▼
+Bot Handlers
+    │
+    ▼
+Application Layer
+    │
+    ├── Wallet Service
+    ├── Transfer Service
+    ├── Balance Service
+    │
+    ▼
+PostgreSQL
+    │
+    ▼
+Circle APIs
+    │
+    ▼
+ARC Testnet
 ```
 
 ---
 
-## Create `.env`
+## Security
 
-```env
-TELOXIDE_TOKEN=your_bot_token
-DATABASE_URL=postgresql://postgres:password@host:5432/database
-RUST_LOG=trace
-```
+The project follows several security practices:
 
----
-
-## Run the project
-
-```bash
-cargo run
-```
+- Developer-controlled wallets managed by Circle
+- Encrypted Entity Secret handling
+- Idempotent transaction requests
+- Database-backed wallet ownership mapping
+- Separation of configuration and business logic
 
 ---
 
-# Database
+## Current Status
 
-The project uses PostgreSQL with SQLx.
+### Implemented
 
-The database table is automatically created on startup if it does not exist.
-
----
-
-# Goals of This Project
-
-This project was designed to:
-
-- Learn Telegram bot development in Rust
-- Learn SQLx and PostgreSQL
-- Practice async Rust architecture
-- Learn state management with Teloxide dialogues
-- Build a reusable template for future Telegram bots
+- Wallet Set initialization
+- Wallet creation
+- User database integration
+- Wallet menu system
+- Balance retrieval
+- Asset transfers
+- Transaction response handling
 
 ---
 
-# Future Improvements
+## Development
 
-- Delete todos
-- Edit todos
-- Better error handling
-- Persistent dialogue storage
-- SQLx migrations
-- Docker support
-- Deployment automation
-
----
-
-# Deployment
-
-The project can be deployed on platforms such as:
-
-- Railway
-- Fly.io
-- DigitalOcean
-- VPS servers
-
----
-
-# License
-
-MIT
+This project is actively under development and serves as the foundation for a broader ARC ecosystem assistant on Telegram.
