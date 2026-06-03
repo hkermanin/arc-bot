@@ -83,7 +83,7 @@ pub async fn balance_show_bot(
     wallet_config: WalletConfig,
 ) -> HandlerResult {
     let result = show_balance(q.from.id.0 as i64, &db, &wallet_config).await?;
-    
+
     let keyboard = InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
         "⬅️ Back",
         "cancel_send",

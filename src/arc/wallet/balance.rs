@@ -33,12 +33,10 @@ pub async fn show_balance(
     db: &sqlx::Pool<sqlx::Postgres>,
     wallet_config: &WalletConfig,
 ) -> anyhow::Result<String> {
-    let wallet_id: String = sqlx::query_scalar(
-        "SELECT wallet_id FROM users WHERE user_id = $1",
-    )
-    .bind(user_id)
-    .fetch_one(db)
-    .await?;
+    let wallet_id: String = sqlx::query_scalar("SELECT wallet_id FROM users WHERE user_id = $1")
+        .bind(user_id)
+        .fetch_one(db)
+        .await?;
 
     let client = Client::new();
 
@@ -57,10 +55,7 @@ pub async fn show_balance(
     let balance: BalanceResponse = serde_json::from_str(&body)?;
 
     if balance.data.token_balances.is_empty() {
-        return Ok(
-            "💰 Wallet Balance\n\nNo assets found in this wallet."
-                .to_string(),
-        );
+        return Ok("💰 Wallet Balance\n\nNo assets found in this wallet.".to_string());
     }
 
     let mut message = String::from("💰 Wallet Balance\n\n");
@@ -74,9 +69,7 @@ pub async fn show_balance(
 
         message.push_str(&format!(
             "• {} ({}): {}\n",
-            token.token.symbol,
-            token_type,
-            token.amount
+            token.token.symbol, token_type, token.amount
         ));
     }
 

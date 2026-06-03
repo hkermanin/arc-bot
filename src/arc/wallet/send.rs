@@ -5,10 +5,21 @@ use uuid::Uuid;
 
 use crate::arc::wallet::encrypt::ciphertext;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct CircleErrorResponse {
     pub code: i32,
     pub message: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TransferResponse {
+    pub data: TransferData,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct TransferData {
+    pub id: String,
+    pub state: String,
 }
 
 #[derive(Serialize)]
@@ -67,9 +78,18 @@ pub async fn send_transaction(
         .send()
         .await?;
 
+    let is_success = response.status().is_success();
     let response_text = response.text().await?;
 
-    let response: CircleErrorResponse = serde_json::from_str(&response_text)?;
+    if is_success {
+        let tx: TransferResponse = serde_json::from_str(&response_text)?;
 
-    Ok(response.message)
+        Ok(format!(
+            "✅ Transaction submitted successfully.",
+        ))
+    } else {
+        let err: CircleErrorResponse = serde_json::from_str(&response_text)?;
+
+        Ok(format!("❌ Transfer Failed\n\n{}", err.message))
+    }
 }
