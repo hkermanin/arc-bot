@@ -1,4 +1,5 @@
 use crate::arc::wallet::arc_create_wallet;
+use crate::arc::wallet::balance::show_balance;
 use crate::arc::wallet::init::WalletConfig;
 use crate::arc::wallet::send::send_transaction;
 use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
@@ -52,7 +53,7 @@ pub async fn confirm_send(
             response
         }
 
-        _ => {"Unexpected state. Please start the send process again.".to_string()}
+        _ => "Unexpected state. Please start the send process again.".to_string(),
     };
 
     dialogue.update(State::Wallet).await?;
@@ -70,6 +71,27 @@ pub async fn confirm_send(
     )
     .reply_markup(keyboard)
     .await?;
+
+    Ok(())
+}
+
+pub async fn balance_show_bot(
+    bot: Bot,
+    q: CallbackQuery,
+    dialogue: MyDialogue,
+    db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
+) -> HandlerResult {
+    let result = show_balance(q.from.id.0 as i64, &db, &wallet_config).await?;
+    
+    let keyboard = InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
+        "⬅️ Back",
+        "cancel_send",
+    )]]);
+    bot.edit_message_text(q.from.id, q.message.unwrap().id(), result)
+        .reply_markup(keyboard)
+        .await?;
+    dialogue.update(State::Main).await?;
 
     Ok(())
 }

@@ -1,6 +1,6 @@
 use crate::arc::wallet::init::WalletConfig;
-use serde::{Deserialize, Serialize};
 use reqwest::Client;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::arc::wallet::encrypt::ciphertext;
@@ -40,7 +40,6 @@ pub async fn send_transaction(
     db: sqlx::Pool<sqlx::Postgres>,
     wallet_config: WalletConfig,
 ) -> anyhow::Result<String> {
-
     let wallet_id = sqlx::query_scalar("SELECT wallet_id FROM users WHERE user_id = $1")
         .bind(user_id)
         .fetch_one(&db)
@@ -48,7 +47,6 @@ pub async fn send_transaction(
 
     let entity_secret_ciphertext =
         ciphertext(&wallet_config.public_key, &wallet_config.entity_secret)?;
-
 
     let body = TransferRequest {
         idempotency_key: Uuid::new_v4().to_string(),
@@ -63,16 +61,15 @@ pub async fn send_transaction(
     let client = Client::new();
 
     let response = client
-    .post("https://api.circle.com/v1/w3s/developer/transactions/transfer")
-    .bearer_auth(&wallet_config.api_key)
-    .json(&body)
-    .send()
-    .await?;
+        .post("https://api.circle.com/v1/w3s/developer/transactions/transfer")
+        .bearer_auth(&wallet_config.api_key)
+        .json(&body)
+        .send()
+        .await?;
 
     let response_text = response.text().await?;
 
-    let response: CircleErrorResponse =
-    serde_json::from_str(&response_text)?;
+    let response: CircleErrorResponse = serde_json::from_str(&response_text)?;
 
     Ok(response.message)
 }

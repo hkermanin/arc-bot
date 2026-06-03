@@ -2,6 +2,7 @@ use crate::arc::wallet::init::WalletConfig;
 use crate::arc::wallet::wallet::create_wallet;
 use crate::db::fun::wallet::add_user;
 
+pub mod balance;
 mod config;
 mod encrypt;
 pub mod init;
