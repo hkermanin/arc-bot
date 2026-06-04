@@ -1,7 +1,8 @@
 use crate::arc::wallet::init::WalletConfig;
 use crate::bot::handler::callbacks::menu::{back_wallet_show_bot, wallet_show_bot};
 use crate::bot::handler::callbacks::wallet::{
-    balance_show_bot, cancel_send, confirm_send, create_new_wallet, receive_assets, send_to,
+    balance_show_bot, cancel_send, close_qr_bot, confirm_send, create_new_wallet,
+    qr_code_generator, receive_assets, send_to,
 };
 use crate::bot::keyboards::{main_menu_keyboard, wallet_menu_keyboard};
 use crate::bot::state::State;
@@ -32,6 +33,10 @@ pub async fn callback_handler(
             balance_show_bot(bot, q, dialogue, db, wallet_config).await?;
         } else if data == "receive" {
             receive_assets(bot, q, dialogue, db, wallet_config).await?;
+        } else if data == "qr_code" {
+            qr_code_generator(bot, q, dialogue, db, wallet_config).await?;
+        } else if data == "close_qr" {
+            close_qr_bot(bot, q).await?;
         } else if data == "new_wallet" {
             create_new_wallet(bot, q, dialogue, db, wallet_config).await?;
         }
