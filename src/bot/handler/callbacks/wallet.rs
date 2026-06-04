@@ -193,12 +193,13 @@ pub async fn create_new_wallet(
         "✅ Wallet Created Successfully\n\n\
     Your wallet has been created and linked to your account.\n\n\
     🔹 Wallet Address:\n\
-    `{}`\n\n\
+    <code>{}</code>\n\n\
     Choose an action below.",
         result
     );
     bot.edit_message_text(q.from.id, q.message.unwrap().id(), result)
         .reply_markup(main_menu_keyboard())
+        .parse_mode(ParseMode::Html)
         .await?;
     dialogue.update(State::Main).await?;
 
