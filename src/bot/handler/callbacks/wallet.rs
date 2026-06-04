@@ -17,7 +17,7 @@ pub async fn send_to(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> Handle
         .edit_message_text(
             q.message.as_ref().unwrap().chat().id,
             q.message.as_ref().unwrap().id(),
-            "📤 Send Assets\nPlease enter the recipient wallet address:",
+            "📤 Send USDC\n\nPlease enter the recipient wallet address:",
         )
         .reply_markup(cancel_send_keyboard())
         .await?;

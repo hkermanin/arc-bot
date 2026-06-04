@@ -1,3 +1,4 @@
+use crate::arc::wallet::balance::show_balance;
 use crate::arc::wallet::init::WalletConfig;
 use crate::bot::keyboards::{cancel_confirm_send_keyboard, cancel_send_keyboard};
 use crate::bot::state::{SendState, State};
@@ -15,10 +16,15 @@ pub async fn send_1(
     wallet_config: WalletConfig,
 ) -> HandlerResult {
     let recipient = msg.text().unwrap().to_string();
+    let balance = show_balance(msg.chat.id.0, &db, &wallet_config).await?;
 
     bot.delete_message(msg.chat.id, msg.id).await?;
 
-    bot.edit_message_text(msg.chat.id, prompt_message_id, "💰 Enter Amount:")
+    bot.edit_message_text(msg.chat.id, prompt_message_id, format!(
+        "{}\n\
+        Enter the amount of USDC to send:",
+        balance,
+    ))
         .reply_markup(cancel_send_keyboard())
         .await?;
 
@@ -57,7 +63,7 @@ pub async fn send_2(
          <b>Recipient:</b>\n\
          <code>{}</code>\n\n\
          <b>Amount:</b>\n\
-         {}\n\n\
+         {} USDC\n\n\
          Please review the details carefully before confirming.",
             recipient, amount,
         ),

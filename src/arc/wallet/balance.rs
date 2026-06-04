@@ -1,5 +1,6 @@
 use reqwest::Client;
 use serde::Deserialize;
+use std::collections::HashSet;
 
 use crate::arc::wallet::init::WalletConfig;
 
@@ -60,17 +61,21 @@ pub async fn show_balance(
 
     let mut message = String::from("💰 Wallet Balance\n\n");
 
+    let mut seen = HashSet::new();
+
     for token in balance.data.token_balances {
-        let token_type = if token.token.is_native {
-            "Native"
+        if !seen.insert(token.token.symbol.clone()) {
+            continue;
+        }
+        let amount: f64 = token.amount.parse()?;
+
+        let formatted = if amount >= 1.0 {
+            format!("{:.4}", amount)
         } else {
-            "ERC20"
+            format!("{:.8}", amount)
         };
 
-        message.push_str(&format!(
-            "• {} ({}): {}\n",
-            token.token.symbol, token_type, token.amount
-        ));
+        message.push_str(&format!("• {}: {}\n", token.token.symbol, formatted));
     }
 
     Ok(message)
