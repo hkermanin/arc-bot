@@ -8,6 +8,7 @@ use crate::bot::state::{SendState, State};
 use crate::bot::types::{HandlerResult, MyDialogue};
 use teloxide::prelude::*;
 use teloxide::types::{InlineKeyboardButton, InlineKeyboardMarkup};
+use teloxide::types::ParseMode;
 
 pub async fn send_to(bot: Bot, q: CallbackQuery, dialogue: MyDialogue) -> HandlerResult {
     let msg = bot
@@ -90,6 +91,40 @@ pub async fn balance_show_bot(
     )]]);
     bot.edit_message_text(q.from.id, q.message.unwrap().id(), result)
         .reply_markup(keyboard)
+        .await?;
+    dialogue.update(State::Main).await?;
+
+    Ok(())
+}
+
+pub async fn receive_assets(
+    bot: Bot,
+    q: CallbackQuery,
+    dialogue: MyDialogue,
+    db: sqlx::Pool<sqlx::Postgres>,
+    wallet_config: WalletConfig,
+) -> HandlerResult {
+
+    let address: String = sqlx::query_scalar("SELECT wallet_address FROM users WHERE user_id = $1")
+        .bind(q.from.id.0 as i64)
+        .fetch_one(&db)
+        .await?;
+
+    let text = format!(
+        "📥 Receive Assets\n\n\
+     Send assets to the wallet address below:\n\n\
+     <code>{}</code>\n\n\
+     ⚠️ Only send assets supported on ARC Testnet.",
+        address
+    );
+
+    let keyboard = InlineKeyboardMarkup::new(vec![vec![InlineKeyboardButton::callback(
+        "⬅️ Back",
+        "cancel_send",
+    )]]);
+    bot.edit_message_text(q.from.id, q.message.unwrap().id(), text)
+        .reply_markup(keyboard)
+        .parse_mode(ParseMode::Html)
         .await?;
     dialogue.update(State::Main).await?;
 

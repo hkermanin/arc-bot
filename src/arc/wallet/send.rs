@@ -84,9 +84,7 @@ pub async fn send_transaction(
     if is_success {
         let tx: TransferResponse = serde_json::from_str(&response_text)?;
 
-        Ok(format!(
-            "✅ Transaction submitted successfully.",
-        ))
+        Ok(format!("✅ Transaction submitted successfully.",))
     } else {
         let err: CircleErrorResponse = serde_json::from_str(&response_text)?;
 
