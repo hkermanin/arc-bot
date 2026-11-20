@@ -1,132 +1,55 @@
 # ArcCircleBot
 
-**Telegram Bot:** `@arccirclebot`
+ArcCircleBot is a Telegram bot built in Rust for creating wallets, checking
+balances, and sending USDC on Arc Testnet. It uses Circle Developer-Controlled
+Wallets and PostgreSQL.
 
-Try the bot directly on Telegram and create your own ARC testnet wallet in seconds.
+Telegram handle: [@arccirclebot](https://t.me/arccirclebot)
 
----
+## What you can do
 
-## Overview
+- Create an Arc Testnet wallet from the Telegram menu.
+- View your wallet balance and share your receive address as a QR code.
+- Review the recipient and amount before confirming a USDC transfer.
 
-ArcCircleBot is a Telegram-based crypto wallet built with Rust and powered by Circle Developer-Controlled Wallets.
+## Run locally
 
-The bot allows users to create and manage wallets directly from Telegram without needing to interact with complex blockchain tools or browser extensions.
+You’ll need Rust and Cargo (the repo pins Rust 1.89.0), a PostgreSQL database,
+a Telegram bot token from BotFather, and a Circle API key with a registered
+entity secret.
 
-### Current Features
-
-- Wallet creation on ARC Testnet
-- Wallet balance retrieval
-- Asset transfers between wallets
-- User wallet management
-- Secure Circle API integration
-- PostgreSQL-backed persistence
-
----
-
-## Features
-
-### Wallet Management
-
-- Create a new wallet
-- Store wallet information securely
-- Retrieve wallet details when needed
-
-### Balance Tracking
-
-- View wallet balances
-- Display token balances available in the wallet
-
-### Asset Transfers
-
-- Send assets to another wallet address
-- Confirmation step before execution
-- Transaction status reporting
-
-### Infrastructure
-
-- Rust async backend
-- PostgreSQL database
-- Circle Developer-Controlled Wallets
-- RSA-OAEP + SHA256 encryption for Entity Secret handling
-- Modular architecture for future expansion
-
----
-
-## Technology Stack
-
-### Backend
-
-- Rust
-- Tokio
-- Reqwest
-- Serde
-- SQLx
-- Anyhow
-
-### Database
-
-- PostgreSQL
-
-### Blockchain Infrastructure
-
-- Circle Developer-Controlled Wallets
-- ARC Testnet
-
----
-
-## Project Architecture
-
-```text
-Telegram
-    │
-    ▼
-Bot Handlers
-    │
-    ▼
-Application Layer
-    │
-    ├── Wallet Service
-    ├── Transfer Service
-    ├── Balance Service
-    │
-    ▼
-PostgreSQL
-    │
-    ▼
-Circle APIs
-    │
-    ▼
-ARC Testnet
+```sh
+git clone https://github.com/hkermanin/arc-bot.git
+cd arc-bot
 ```
 
----
+Create a `.env` file in the repository root:
 
-## Security
+```dotenv
+TELOXIDE_TOKEN=your_telegram_bot_token
+DATABASE_URL=postgresql://username:password@localhost:5432/arc_bot
+CIRCLE_API_KEY=your_circle_api_key
+ENTITY_SECRET=your_registered_entity_secret
+RUST_LOG=info
+```
 
-The project follows several security practices:
+Keep real credentials in your local `.env` file. The repository ignores this
+file. Create the PostgreSQL database first and give the configured user
+permission to create tables.
 
-- Developer-controlled wallets managed by Circle
-- Encrypted Entity Secret handling
-- Idempotent transaction requests
-- Database-backed wallet ownership mapping
-- Separation of configuration and business logic
+```sh
+cargo run --locked
+```
 
----
+On startup, the bot creates any missing tables. It reuses the Circle wallet
+set stored in PostgreSQL, or creates one if the database has no saved set.
+Once the bot is running, send `/start` to the Telegram bot tied to your token.
 
-## Current Status
+## Code layout
 
-### Implemented
+- `src/bot/` handles Telegram messages, menus, and transfer confirmation.
+- `src/arc/wallet/` handles Circle API calls for wallet creation, balances,
+  and transfers.
+- `src/db/` stores the wallet set and maps Telegram users to their wallets.
 
-- Wallet Set initialization
-- Wallet creation
-- User database integration
-- Wallet menu system
-- Balance retrieval
-- Asset transfers
-- Transaction response handling
-
----
-
-## Development
-
-This project is actively under development and serves as the foundation for a broader ARC ecosystem assistant on Telegram.
+This project is intended for Arc Testnet.
