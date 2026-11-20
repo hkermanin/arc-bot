@@ -12,10 +12,6 @@ Telegram handle: [@arccirclebot](https://t.me/arccirclebot)
 - View your wallet balance and share your receive address as a QR code.
 - Review the recipient and amount before confirming a USDC transfer.
 
-## Demo
-
-![ArcCircleBot interface in Telegram on Arc Testnet](docs/images/arc-bot-demo.png)
-
 ## Run locally
 
 You’ll need Rust and Cargo (the repo pins Rust 1.89.0), a PostgreSQL database,
